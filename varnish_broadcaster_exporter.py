@@ -8,8 +8,6 @@ import http.server
 
 
 def get_broadcaster_status():
-    hn = socket.gethostname()
-
     sout = io.StringIO()
 
     sout.write("# HELP varnish_broadcaster_requests Numbeer of broadcaster requests\n")
@@ -17,12 +15,10 @@ def get_broadcaster_status():
 
     r = requests.get("http://localhost:8089/api/stats")
     for gn, g in r.json()['groups'].items():
-        if hn in g['hosts']:
-            # Found us!
-            h = g['hosts'][hn]
+        for hn, h in g['hosts'].items():
             for r, statuses in h['requests'].items():
                 for s, num in statuses.items():
-                    sout.write('varnish_broadcaster_requests{{method="{}",status="{}"}} {}\n'.format(r, s, num))
+                    sout.write('varnish_broadcaster_requests{{host="{}",method="{}",status="{}"}} {}\n'.format(hn, r, s, num))
     return sout.getvalue()
 
 
