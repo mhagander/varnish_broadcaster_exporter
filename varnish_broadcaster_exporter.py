@@ -10,7 +10,7 @@ import http.server
 def get_broadcaster_status():
     sout = io.StringIO()
 
-    sout.write("# HELP varnish_broadcaster_requests Numbeer of broadcaster requests\n")
+    sout.write("# HELP varnish_broadcaster_requests Number of broadcaster requests\n")
     sout.write("# TYPE varnish_broadcaster_requests counter\n")
 
     r = requests.get("http://localhost:8089/api/stats")
